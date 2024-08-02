@@ -1,0 +1,177 @@
+{% extends 'message/base.html' %}
+
+{% block content%}
+    <div class="container-fluid px-2 px-md-4">
+        
+        <div class="card card-body mt-4">
+        <div class="row gx-4 mb-2">
+        <div class="col-auto">
+        <div class="avatar avatar-xl position-relative">
+        </div>
+        </div>
+        <div class="col-auto my-auto">
+        <div class="h-100">
+            {% if user.is_authenticated%}
+            <h5 class="mb-1">
+           {{user.username}}
+        </h5>
+        {% endif %}
+        <p class="mb-0 font-weight-normal text-sm">
+        CEO / Co-Founder
+        </p>
+        </div>
+        </div>
+        
+        <div class="row">
+        <div class="row mt-4">
+        <div class="col-md-5 col-lg-4">
+        <div class="card blur shadow-blur max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
+        <div class="card-header p-3">
+        <h6>Friends</h6>
+        <div class="input-group input-group-outline">
+        <label class="form-label">Search contact</label>
+        <input type="text" class="form-control">
+        </div>
+        </div>
+        <div class="card-body p-2">
+        <a href="javascript:;" class="d-block p-2 border-radius-lg bg-gradient-primary">
+        <div class="d-flex p-2">
+            {% for member in conversation.members.all %}
+            {% if member != request.user %}
+        <div class="ms-3">
+        <div class="justify-content-between align-items-center">
+        <h6 class="text-white mb-0">{{ member.username }}
+        <span class="badge badge-success"></span>
+        </h6>
+        </div>
+        </div>
+        {% endif%}
+        {% endfor %}
+        </div>
+        </a>
+      
+        </div>
+        </div>
+        </div>
+        <div class="col-md-7 col-lg-8">
+        <div class="card blur shadow-blur max-height-vh-70">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+        <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
+        <div class="row">
+        <div class="col-md-9 col-lg-10">
+        <div class="d-flex align-items-center">
+        {% for member in conversation.members.all %}
+        {% if member != request.user %}
+        <div class="ms-3">
+        <h6 class="mb-0 d-block text-white">{{ member.username }}</h6>
+        <span class="text-sm text-white opacity-8">last seen {{ conversation.modified_at }}</span>
+        </div>
+        {% endif%}
+        {% endfor %}
+        </div>
+        </div>
+        <div class="col-1 my-auto">
+        <button class="btn btn-icon-only text-white mb-0 me-3 me-sm-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Video call">
+        <i class="material-icons">videocam</i>
+        </button>
+        </div>
+        <div class="col-1 my-auto">
+        <div class="dropdown">
+        <button class="btn btn-icon-only text-white mb-0" type="button" data-bs-toggle="dropdown">
+        <i class="material-icons">settings</i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end me-sm-n2 p-2" aria-labelledby="chatmsg">
+        <li>
+        <a class="dropdown-item border-radius-md" href="javascript:;">
+        Profile
+        </a>
+        </li>
+        <li>
+        <a class="dropdown-item border-radius-md" href="javascript:;">
+        Mute conversation
+        </a>
+        </li>
+        <li>
+        <a class="dropdown-item border-radius-md" href="javascript:;">
+        Block
+        </a>
+        </li>
+        <li>
+         <a class="dropdown-item border-radius-md" href="javascript:;">
+        Clear chat
+        </a>
+        </li>
+        <li>
+        <hr class="dropdown-divider">
+        </li>
+        <li>
+        <a class="dropdown-item border-radius-md text-danger" href="javascript:;">
+        Delete chat
+        </a>
+        </li>
+        </ul>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        
+        <div class="card-body overflow-auto overflow-x-hidden">
+            {% for message in conversation.messages.all %}
+        {% if message.created_by == request.user %}
+            <div class="row justify-content-end text-right mb-4">
+                <div class="col-auto">
+                <div class="card bg-gradient-primary">
+                <div class="card-body py-2 px-3 text-white">
+                <p class="mb-1">
+                    {{ message.content}} <br>
+                </p>
+                <div class="d-flex align-items-center justify-content-end text-sm opacity-6">
+                <i class="ni ni-check-bold text-sm me-1"></i>
+                <small> {{ message.created_at}}</small>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                {% else %}
+        <div class="row justify-content-start mb-4">
+        <div class="col-auto">
+           
+        <div class="card ">
+        <div class="card-body py-2 px-3">
+        <p class="mb-1">
+            {{ message.content}}
+        </p>
+        <div class="d-flex align-items-center text-sm opacity-6">
+        <i class="ni ni-check-bold text-sm me-1"></i>
+        <small> {{ message.created_at}} </small>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+        </div>
+       
+        <div class="card-footer d-block">
+        <form class="align-items-center" action="." method="post">
+            {% csrf_token %}
+        <div class="input-group input-group-outline d-flex">
+        <label class="form-label"></label>
+       {{ form.content }}
+        <button class="btn bg-gradient-primary mb-0">
+         <i class="material-icons">send</i>
+        </button>
+        </div>
+        </form>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+{% endblock %}
